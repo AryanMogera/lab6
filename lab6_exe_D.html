@@ -2,8 +2,8 @@
 =========================================================
 Name        : lab6_exe_D.html
 Assignment  : Lab 6, Exercise D
-Author(s)   : Mahdi Ansari, William Arthur Philip Louis
-Submission  : May 21, 2030
+Author(s)   : Aryan Mogera, Sheharyar
+Submission  : 29 Feburary
 Description : API Usage.
 =========================================================
 -->
@@ -44,19 +44,66 @@ Description : API Usage.
             width: 40%;
         }
     </style>
+
     <script>
         // Function to fetch and display students
         async function fetchStudents() {
+            try {
+                const response = await fetch('https://65e13f7bd3db23f7624a9d81.mockapi.io/students');
+
+                const students = await response.json();
+
+                const studentListing = document.getElementById('studentList');
+
+                studentList.innerHTML = ''; 
+
+                students.forEach(student => 
+                {
+                    const li = document.createElement('li');
+                    li.textContent = student.name;
+                    li.onclick = () => fetchCourses(student.id); 
+                    studentListing.appendChild(li);
+            });
+            if (students.length > 0) {
+                fetchCourses(students[0].id); // Automatically fetch courses for the first student
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch students from the request:', error);
+        }
             
         }
 
         // Function to fetch and display courses for a student
         async function fetchCourses(studentId) {
+
+            try {
+            const response = await fetch(`https://65e13f7bd3db23f7624a9d81.mockapi.io/students/1/courses`);
+
+            const courses = await response.json();
+
+            const courseList = document.getElementById('courseList');
+
+            courseList.innerHTML = ''; 
+            
+            courses.forEach(course => {
+                const li = document.createElement('li');
+                li.textContent = `${course.name}  (Unit: ${course.unit})`;
+                courseList.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error(`Failed to fetch courses for student ${studentId}:`, error);
+        }
+
+
             
         }
 
         // Fetch students on window load
         window.onload = fetchStudents;
+        
+
     </script>
 </head>
 <body>
